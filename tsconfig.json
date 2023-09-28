@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "environment.d.ts", "initAuth.js", "pages/api/login.js", "pages/api/auth/[...nextauth].js", "pages/api/getSpotifyReq.ts"],
   "exclude": ["node_modules"]
 }
