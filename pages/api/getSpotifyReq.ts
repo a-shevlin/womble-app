@@ -3,7 +3,6 @@ import { refreshAccessToken } from './auth/[...nextauth]';
 
 export default async function handler(req: any, res: any) {
   const session = await getSession({req});
-  console.log(session);
   
   // console.log(session);
   if (!session) {
