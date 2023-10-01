@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import useSpotifyApi from '@/hooks/useSpotifyApi';
+import { Session } from 'next-auth';
 
-export default function Account() {
-  const session = useSession();
+type Props = {
+  session: Session
+}
+
+export default function Account({ session }: Props) {
   const { data: profile, loading: profileLoading, error: profileError } = useSpotifyApi("me", session);
   const { data: tracks, loading: tracksLoading, error: tracksError } = useSpotifyApi("me/top/tracks?time_range=short_term", session);
   const { data: artists, loading: artistsLoading, error: artistsError } = useSpotifyApi("me/top/artists?time_range=short_term", session);
@@ -34,7 +37,7 @@ export default function Account() {
       )}
       {!tracksLoading ? ( 
         <ul>
-          {tracks.items.map((track, index) => (
+          {tracks?.items.map((track, index) => (
             <li key={index}>{track.name} by {track.artists.map(((artist, artistIndex) => (
               artistIndex === 1 ? (
                 <span key={artistIndex}>ft. {artist.name} </span>

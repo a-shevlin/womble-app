@@ -22,7 +22,7 @@ const params = {
 const LOGIN_URL = "https://accounts.spotify.com/authorize?" + new URLSearchParams(params).toString();
 
 export async function refreshAccessToken(token) {
-  console.log("refreshing with token: ", token);
+  // console.log("refreshing with token: ", token);
   const params = new URLSearchParams()
   params.append("grant_type", "refresh_token")
   params.append("refresh_token", token.refreshToken)
@@ -34,7 +34,7 @@ export async function refreshAccessToken(token) {
       body: params
   })
   const data = await response.json()
-  console.log("response data", data);
+  // console.log("response data", data);
   return {
       ...token,
       accessToken: data.access_token,
@@ -60,49 +60,51 @@ export const authOptions = {
     signIn: "/login"
   },
   callbacks: {
-    // async signIn({user, account, profile}) {
-    //   try {
-    //     if (account.provider === 'spotify') {
-    //       console.log("in signIn");
-    //       console.log(account);
-    //       const userRef = doc(db, 'users', user.id);
+    async signIn({user, account, profile}) {
+      try {
+        if (account.provider === 'spotify') {
+          console.log("in signIn");
+          console.log(account);
+          const userRef = doc(db, 'users', user.id);
           
-    //       // Check if user already exists
-    //       const userSnap = await getDoc(userRef);
+          // Check if user already exists
+          const userSnap = await getDoc(userRef);
           
-    //       if (!userSnap.exists()) {
-    //         // Only write if user does not exist
-    //         await setDoc(userRef, { ...user, spotifyProfile: profile, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true });
-    //       } else {
-    //         await updateDoc(userRef, { updatedAt: serverTimestamp() })
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.error('Error Writing to Firestore:', error);
-    //     return false;
-    //   }
-    //   return true;
-    // },
+          if (!userSnap.exists()) {
+            // Only write if user does not exist
+            await setDoc(userRef, { ...user, spotifyProfile: profile, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true });
+            
+
+          } else {
+            await updateDoc(userRef, { updatedAt: serverTimestamp() })
+          }
+        }
+      } catch (error) {
+        console.error('Error Writing to Firestore:', error);
+        return false;
+      }
+      return true;
+    },
     async jwt({ token, account }) {
       // Persist the OAuth access_token to the token right after signin
-      console.log("JWT TOken", token);
+      // console.log("JWT TOken", token);
       if (account) {
         console.log("access token expires: ", new Date(account.expires_at * 1000))
         console.log("current time:", new Date())
-        console.log("account: ", account)
+        // console.log("account: ", account)
         
         if ( new Date().valueOf() < account.expires_at * 1000) {
           token.accessToken = account.access_token
           token.refreshToken = account.refresh_token
           token.accessTokenExpires = account.expires_at
-          console.log("token: ", token);
+          // console.log("token: ", token);
           
         }
       } else { 
         // access token has expired
-        console.log("grabbing token")
+        // console.log("grabbing token")
         let newToken =  await refreshAccessToken(token)
-        console.log(`new Token ${newToken}`)
+        // console.log(`new Token ${newToken}`)
         token = {...token, ...newToken};
       }
       return token
@@ -113,9 +115,8 @@ export const authOptions = {
         return session; // return the session object as is or modify as needed.
       }
       let newSession = {...session};
-      console.log("session: ", session);
-      console.log("token", token);
-      // console.log("account: ", data);
+      // console.log("session: ", session);
+      // console.log("token", token);
       // Send properties to the client, like an access_token from a provider.
       if (token.accessTokenExpires && Date.now() < token.accessTokenExpires * 1000) {
         newSession.accessToken = token.accessToken

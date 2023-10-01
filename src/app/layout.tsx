@@ -44,14 +44,20 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`color-scheme ${inter.className}`}>
+      <body className={`color-scheme ${inter.className} p-2`}>
         <SessionProvider session={session}>
           <main>
-          <Nav />
           {!session? (
-            <Auth/>
+            <div>
+
+              <Nav hasSession={false} />
+              <Auth/>
+            </div>
           ) : (
-            <Account/>
+            <div>
+              <Nav hasSession={true} sessionData={session} />
+              <Home hasSession={true} sessionData={session} />
+            </div>
           )}
           </main>
         </SessionProvider>

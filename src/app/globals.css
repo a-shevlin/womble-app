@@ -4,6 +4,13 @@
 
 @layer components {
   .color-scheme {
-    @apply bg-womble-light dark:bg-womble-dark w-full h-[100lvh] text-womble-dark dark:text-womble-light;
+    @apply 
+      box-border
+      w-full 
+      h-[100lvh] 
+      bg-womble-light 
+      dark:bg-womble-dark 
+      text-womble-dark 
+      dark:text-womble-light;
   }
 }
