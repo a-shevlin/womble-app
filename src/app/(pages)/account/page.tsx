@@ -11,7 +11,7 @@ type Props = {
 export default function Account({ session }: Props) {
   const { data: profile, loading: profileLoading, error: profileError } = useSpotifyApi("me", session);
   const { data: tracks, loading: tracksLoading, error: tracksError } = useSpotifyApi("me/top/tracks?time_range=short_term", session);
-  const { data: artists, loading: artistsLoading, error: artistsError } = useSpotifyApi("me/top/artists?time_range=short_term", session);
+  
   // const profile = await fetchProfile(token);
 
 
@@ -22,15 +22,11 @@ export default function Account({ session }: Props) {
   if (profileError) return <p>Error loading profile: {profileError.message}</p>;
   if (tracksError) return <p>Error loading tracks: {tracksError.message}</p>;
 
-
-  console.log("Tracks: ", tracks);
-  console.log("Artists", artists);
   return (
     <div>
-      <h1>Hello! 
       {profile ? (
         <div>
-          <p>{profile.id}</p>
+          <p>{profile.id} settings</p>
         </div>
       ) : (
         <p>Unable to load profile.</p>
@@ -53,7 +49,7 @@ export default function Account({ session }: Props) {
       ) : (
         <p>Loading...</p>
        )}
-      </h1>
+
     </div>
   )
 }

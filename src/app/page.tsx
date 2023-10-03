@@ -3,6 +3,7 @@ import { Session } from "next-auth";
 import { useSession } from 'next-auth/react';
 import { usePathname } from "next/navigation";
 import Account from "./(pages)/account/page";
+import UserHome from "@/components/UserHome";
 
 type Props = {
   hasSession: boolean,
@@ -12,13 +13,13 @@ type Props = {
 export default function Home({hasSession, sessionData}: Props) {
   const pathname = usePathname()
   
-  if (!hasSession) return <p>Please login again!</p>
+  if (!hasSession) return <p>Error authenticating spotify. Please login again!</p>
 
   return (
-    <main className="">
-      <div className="">
+    <main className="w-full h-full">
+      <div className="w-full h-full">
         { pathname == "/" ? (
-          <p>Home page component. tiled list of friend dashboard?</p>
+          <UserHome session={sessionData}/>
         ) : pathname == "/account" ? (
           <Account session={sessionData}/>
         ) : (

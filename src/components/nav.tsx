@@ -1,11 +1,13 @@
 'use client';
 import { signIn, signOut, useSession, getSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link"
 import { Button, ReusableLink } from "@/components";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import Image from "next/image";
+import { IconLogout2, IconSettings } from '@tabler/icons-react';
+// import { useRouter } from "next/router";
 
 type Props = {
   hasSession: boolean,
@@ -14,38 +16,52 @@ type Props = {
 
 
 export default function Nav({hasSession, sessionData}: Props) {
-  // Inside a component or a function
-  const { data: session, status } = useSession();
   const pathname = usePathname()
-
+  const [oldPathname, setOldPathname] = useState("/");
+  const [isOpen, setOpen] = useState(false);
+  const toggleMenu = () => setOpen(!isOpen);
 
   useEffect(() => {
-    if (hasSession) {
-      // console.log("authenticated");
-      getSession()
-        // .then(newSession => {
-        //   console.log('New Session:', newSession);
-        // });
+    let curPathname = pathname || "";
+    if (curPathname != oldPathname) {
+      setOpen(!isOpen);
+      setOldPathname(curPathname);
     }
-  }, [hasSession]);
+  }, [pathname, oldPathname, isOpen]);
 
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full">
       {!hasSession ? (
-        <Button onClick={() => signIn('spotify')} text={"Login"} />
+        <Button onClick={() => signIn('spotify')} text={"Login"} >
+          <IconLogout2 />
+        </Button>
       ) : (
-        <div className="w-full flex flex-row-reverse gap-2 text-lg">
-          <Button onClick={() => signOut()} text={"Logout"} />
-          {pathname == "/" ? (
-            <ReusableLink linkTo={"/account"} text={"Account"} />
-          ) : (
-            <ReusableLink linkTo={"/"} text={"Home"} />
-          )}
-          {/* user profile image */}
-          {/* <Image src={sessionData.user.image} alt="User Profile" width={100} height={100} quality={100}/> */} 
+        <div className="w-full flex flex-row">
 
-        </div>    
+          <ReusableLink linkTo={"/"} classes="text-xl text-womble-accent">womble</ReusableLink>
+          <div className="w-full text-lg flex flex-row-reverse">
+
+              <Image onClick={() => toggleMenu()} src={sessionData.user.image} alt="Spotify Profile Image" style={{objectFit: "cover", aspectRatio: "1/1", borderRadius: "100%", borderWidth: "3px", borderColor: "#494949a2"}} width={40} height={40} quality={100}/> 
+            
+            {!isOpen ? (
+              <div></div>
+              ) : (
+                <div className="absolute flex flex-col-reverse w-8 justify-items-center gap-2 top-[4.2rem]">
+                <Button onClick={() => signOut()}>
+                  <IconLogout2 />
+                </Button>
+                {pathname == "/" ? (
+                  <ReusableLink linkTo={"/account"} classes="px-[0.20rem]">
+                    <IconSettings />
+                  </ReusableLink>
+                ) : (
+                  <div></div>
+                  )}
+              </div>
+            )}
+          </div>    
+        </div>
       )}
     </div>
   )

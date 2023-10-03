@@ -44,7 +44,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`color-scheme ${inter.className} p-2`}>
+      <body className={`box-border w-full h-[100lvh] bg-womble-light text-womble-dark dark:bg-womble-dark dark:text-womble-light ${inter.className} p-4`}>
         <SessionProvider session={session}>
           <main>
           {!session? (

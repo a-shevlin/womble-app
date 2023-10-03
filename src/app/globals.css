@@ -2,15 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@layer components {
-  .color-scheme {
-    @apply 
-      box-border
-      w-full 
-      h-[100lvh] 
-      bg-womble-light 
-      dark:bg-womble-dark 
-      text-womble-dark 
-      dark:text-womble-light;
-  }
+.test-class {
+  color: #a17041
 }
